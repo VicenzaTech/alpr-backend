@@ -22,3 +22,8 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+# Đảm bảo thư mục uploads không bị ignore
+# Nếu trước đó có dòng uploads hoặc /uploads thì hãy xoá nó
+# Ignore uploads directory
+uploads/

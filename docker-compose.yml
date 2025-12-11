@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: alpruser
+      POSTGRES_PASSWORD: alprpass
+      POSTGRES_DB: alprdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  alpr-backend:
+    build: .
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: alpruser
+      DB_PASSWORD: alprpass
+      DB_NAME: alprdb
+      SUPABASE_URL: https://lgkkihzktzzuvwtcmcil.supabase.co
+      SUPABASE_SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxna2tpaHprdHp6dXZ3dGNtY2lsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTExNTg0NywiZXhwIjoyMDYwNjkxODQ3fQ.KVHz6rXnn6Z7IQyWXvLLABa8T-zMLnWqlR-5KFduaJg
+      
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    restart: unless-stopped
+    volumes: 
+      - ./uploads:/app/uploads
+
+volumes:
+  db_data:

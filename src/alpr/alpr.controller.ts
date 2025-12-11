@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AlprService } from './alpr.service';
-import { DetectionStatus } from './entities/detection.entity';
+import { DetectionStatus } from '../database/entities/detection.entity';
 
-@Controller('api/alpr')
+@Controller('alpr')
 export class AlprController {
     private readonly logger = new Logger(AlprController.name);
 

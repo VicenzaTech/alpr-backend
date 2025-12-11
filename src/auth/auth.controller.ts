@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserRole } from 'src/user/entity/user.entity';
+import { UserRole } from 'src/database/entities/user.entity';
     
 @Controller('auth')
 export class AuthController {

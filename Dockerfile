@@ -25,4 +25,4 @@ COPY wait-for-postgres.sh ./
 RUN chmod +x wait-for-postgres.sh
 
 # Start app chỉ khi DB đã sẵn sàng
-CMD ["./wait-for-postgres.sh", "db", "npm", "run", "start:prod"]
+CMD ["npm", "run", "start:prod"]

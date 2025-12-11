@@ -1,9 +1,8 @@
-// src/auth/auth.service.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserRole } from '../user/entity/user.entity';
+import { User, UserRole } from '../database/entities/user.entity';
 
 @Injectable()
 export class AuthService {

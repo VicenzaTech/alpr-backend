@@ -91,14 +91,14 @@ export class Vehicle {
     vehicleType: VehicleType;
 
     @Column({ name: 'customer_id', type: 'bigint', nullable: true })
-    customerId?: string;
+    customerId?: string | null;
 
     @ManyToOne(() => Customer, (customer) => customer.vehicles, {
         nullable: true,
         onDelete: 'SET NULL',
     })
     @JoinColumn({ name: 'customer_id' })
-    customer?: Customer;
+    customer?: Customer | null;
 
     @Column({ name: 'driver_name', length: 255, nullable: true })
     driverName?: string;

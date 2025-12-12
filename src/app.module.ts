@@ -11,6 +11,8 @@ import { ConfigModule } from '@nestjs/config';
 import { CameraModule } from './camera/camera.module';
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
 import { format, transports } from 'winston';
+import { CustomerModule } from './customer/customer.module';
+import { VehicleModule } from './vehicle/vehicle.module';
 
 @Module({
     imports: [
@@ -62,6 +64,8 @@ import { format, transports } from 'winston';
             synchronize: true,
         }),
         CameraModule,
+        CustomerModule,
+        VehicleModule,
     ],
     controllers: [AppController],
     providers: [AppService],

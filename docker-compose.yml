@@ -33,10 +33,6 @@ services:
       SUPABASE_URL: https://lgkkihzktzzuvwtcmcil.supabase.co
       SUPABASE_SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxna2tpaHprdHp6dXZ3dGNtY2lsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTExNTg0NywiZXhwIjoyMDYwNjkxODQ3fQ.KVHz6rXnn6Z7IQyWXvLLABa8T-zMLnWqlR-5KFduaJg
     
-      GOOGLE_CLIENT_ID: 292530103054-u4jq2k6j3he3rnmm0p0t5vsv1s4q4fok.apps.googleusercontent.com
-      GOOGLE_CLIENT_SECRET: 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
-      GOOGLE_CALLBACK_URL: http://localhost:5555/api/v3/auth/google/callback
-
     
     ports:
       - "5555:5555"

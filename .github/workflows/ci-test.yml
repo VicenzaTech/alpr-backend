@@ -18,26 +18,26 @@ jobs:
       #   - run: npm run test
       - run: npm run build
 
-  PUSH_DOCKER:
-  runs-on: ubuntu-latest
-  needs: CI-DEVELOP
-  permissions:
-    contents: read
-    packages: write
-  steps:
-    - uses: actions/checkout@v4
+    PUSH_DOCKER:
+    runs-on: ubuntu-latest
+    needs: CI-DEVELOP
+    permissions:
+        contents: read
+        packages: write
+    steps:
+        - uses: actions/checkout@v4
 
-    - uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        - uses: docker/login-action@v3
+        with:
+            registry: ghcr.io
+            username: ${{ github.repository_owner }}
+            password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: |
-          ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
-          ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
+        - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+            context: .
+            push: true
+            tags: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}

@@ -39,6 +39,6 @@ jobs:
             context: .
             push: true
             tags: |
-                ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
-                ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
+                ghcr.io/vicenzatech/${{ github.event.repository.name }}:latest
+                ghcr.io/vicenzatech/${{ github.event.repository.name }}:${{ github.sha }}
 

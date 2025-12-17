@@ -3,6 +3,10 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   push:
     branches: ['develop']
+
+permissions: 
+    contents: read
+    packages: write
 jobs:
   CI-DEVELOP:
     runs-on: ubuntu-latest

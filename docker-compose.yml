@@ -3,6 +3,13 @@ services:
   db:
     image: postgres:15
     restart: unless-stopped
+    healthcheck:
+      test:  ["CMD-SHELL", "pg_isready -d alprdb -U alpruser"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
     environment:
       POSTGRES_USER: alpruser
       POSTGRES_PASSWORD: alprpass
@@ -12,29 +19,38 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  # alpr-backend:
-  #   build: .
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     PORT: 5555
-  #     DB_HOST: db
-  #     DB_PORT: 5432
-  #     DB_USER: alpruser
-  #     DB_PASSWORD: alprpass
-  #     DB_NAME: alprdb
-  #     SUPABASE_URL: https://lgkkihzktzzuvwtcmcil.supabase.co
-  #     SUPABASE_SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxna2tpaHprdHp6dXZ3dGNtY2lsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTExNTg0NywiZXhwIjoyMDYwNjkxODQ3fQ.KVHz6rXnn6Z7IQyWXvLLABa8T-zMLnWqlR-5KFduaJg
-  #   ports:
-  #     - "5555:5555"
-  #   depends_on:
-  #     - db
-  #   restart: unless-stopped
-  #   volumes: 
-  #     - ./uploads:/app/uploads
+  alpr-backend:
+    build: .
+    env_file:
+      - .env
+    environment:
+      PORT: 5555
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: alpruser
+      DB_PASSWORD: alprpass
+      DB_NAME: alprdb
+      SUPABASE_URL: https://lgkkihzktzzuvwtcmcil.supabase.co
+      SUPABASE_SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxna2tpaHprdHp6dXZ3dGNtY2lsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTExNTg0NywiZXhwIjoyMDYwNjkxODQ3fQ.KVHz6rXnn6Z7IQyWXvLLABa8T-zMLnWqlR-5KFduaJg
+    
+      GOOGLE_CLIENT_ID: 292530103054-u4jq2k6j3he3rnmm0p0t5vsv1s4q4fok.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: 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
+      GOOGLE_CALLBACK_URL: http://localhost:5555/api/v3/auth/google/callback
 
-  # MEDIA SERVE
+    
+    ports:
+      - "5555:5555"
+    depends_on:
+      db: 
+        condition: service_healthy
 
+    restart: unless-stopped
+    volumes: 
+      # - ./uploads:/app/uploads
+      - .:/app
+      - /app/node_modules
+
+# MEDIA SERVE
 
 volumes:
   db_data:

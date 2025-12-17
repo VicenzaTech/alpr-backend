@@ -50,12 +50,12 @@ async function bootstrap() {
                         avatarUrl: null,
                         dateOfBirth: null,
                     });
-                    console.log(`Synced user: ${user.email}`);
+                    console.log(`Synced asuser: ${user.email}`);
                 }
             }
         }
     } catch (err) {
-        console.error('Sync users error:', err);
+        console.error('Sync users sc error:', err);
     }
     const winston = app.get(WINSTON_MODULE_NEST_PROVIDER)
     app.setGlobalPrefix('/api')

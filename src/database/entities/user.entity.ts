@@ -1,21 +1,21 @@
 import {
-  Entity,
-  Column,
-  PrimaryColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Index,
+    Entity,
+    Column,
+    PrimaryColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    Index,
 } from 'typeorm';
 
 export enum UserRole {
-  ADMIN = 'admin',
-  CREATOR = 'operator',
+    ADMIN = 'admin',
+    OPERATOR = 'operator',
 }
 
 export enum UserStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  LOCKED = 'LOCKED',
+    ACTIVE = 'ACTIVE',
+    INACTIVE = 'INACTIVE',
+    LOCKED = 'LOCKED',
 }
 
 @Entity('users')
@@ -23,42 +23,48 @@ export enum UserStatus {
 @Index('idx_users_phone', ['phone'])
 @Index('idx_users_username', ['username'])
 export class User {
-  @PrimaryColumn('uuid') // Use Supabase user id as the primary key
-  id: string;
+    @PrimaryColumn('uuid') // Use Supabase user id as the primary key
+    id: string;
 
-  @Column({ unique: true, nullable: true })
-  phone: string;
+    @Column('varchar', { unique: true, nullable: true, length: 20 })
+    phone?: string | null;
 
-  @Column({ length: 100, nullable: true })
-  username?: string;
+    @Column({ length: 100, nullable: true })
+    username?: string;
 
-  @Column({ nullable: false })
-  email: string;
+    @Column({ nullable: false })
+    email: string;
 
-  @Column({ name: 'full_name', nullable: false, default: '' })
-  fullName: string;
+    @Column({ name: 'full_name', nullable: false, default: '' })
+    fullName: string;
 
-  @Column({ name: 'password_hash', nullable: true })
-  passwordHash?: string;
+    @Column({ name: 'password_hash', nullable: true })
+    passwordHash?: string;
 
-  @Column({ type: 'enum', enum: UserRole })
-  role: UserRole;
+    @Column({ name: 'auth_provider', nullable: true })
+    authProvider?: string;
 
-  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
-  status: UserStatus;
+    @Column({ name: 'provider_id', nullable: true })
+    providerId?: string;
 
-  @Column({ nullable: false })
-  position: string;
+    @Column({ type: 'enum', enum: UserRole })
+    role: UserRole;
 
-  @Column({ nullable: true })
-  avatarUrl: string;
+    @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
+    status: UserStatus;
 
-  @Column({ type: 'date', nullable: true })
-  dateOfBirth: Date;
+    @Column({ nullable: false })
+    position: string;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+    @Column('text', { nullable: true })
+    avatarUrl?: string | null;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+    @Column({ type: 'date', nullable: true })
+    dateOfBirth?: Date | null;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt: Date;
 }

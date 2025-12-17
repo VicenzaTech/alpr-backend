@@ -31,6 +31,41 @@
 $ yarn install
 ```
 
+## Environment variables
+
+Authentication guards rely on both Supabase and Firebase backends. Besides the existing Supabase keys, configure the following Firebase Admin credentials in your `.env` file (or your deployment secrets):
+
+- `FIREBASE_PROJECT_ID` - Firebase project id.
+- `FIREBASE_CLIENT_EMAIL` - `client_email` from the service account JSON.
+- `FIREBASE_PRIVATE_KEY` - `private_key` from the service account. Keep the literal `\n` line breaks if you paste it on a single line.
+
+These values allow the backend to verify Firebase ID tokens and attach the authenticated user to each request.
+
+Auth v3 (Passport + JWT) requires two additional variables:
+
+- `JWT_SECRET` - symmetric key used to sign the JWT access tokens. Set a strong, unique value per environment.
+- `JWT_EXPIRES_IN` - optional, defaults to `1h`. Supports any value accepted by [`jsonwebtoken`](https://github.com/auth0/node-jsonwebtoken#token-expiration-exp-claim) (e.g. `3600` or `15m`).
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL` - OAuth credentials from the Google Cloud console. The callback must match the `/api/v3/auth/google/callback` route you expose publicly.
+- `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`, `FACEBOOK_CALLBACK_URL` - OAuth credentials from the Meta for Developers portal. Point the callback to `/api/v3/auth/facebook/callback`.
+
+## Auth v2 (Firebase)
+
+- `POST /api/v2/auth/register`: registers a Firebase Auth user (email/password) through the Admin SDK, persists the mirrored record inside PostgreSQL, and returns both the stored user and a Firebase custom token for immediate sign-in.
+- `POST /api/v2/auth/login`: pass the Firebase `idToken` (and optional profile overrides such as `fullName`, `phone`, `position`, etc.). The backend verifies the token with Firebase Admin, syncs the user profile into PostgreSQL, and returns the stored user record alongside Firebase metadata.
+- `GET /api/v2/auth/me`: requires the `Authorization: Bearer <idToken>` header. The `FirebaseAuthGuard` validates the token and responds with the current user profile.
+
+Use these endpoints when the frontend authenticates directly with Firebase; Supabase-based routes remain for legacy clients.
+
+## Auth v3 (Passport + JWT)
+
+- `POST /api/v3/auth/register`: registers a local user stored directly in PostgreSQL. Passwords are hashed with `bcryptjs` and JWT-ready metadata is returned.
+- `POST /api/v3/auth/login`: protected by Passport's `local` strategy (email + password). Successful requests receive a signed JWT (`Authorization: Bearer ...`).
+- `GET /api/v3/auth/me`: requires the JWT access token. The `JwtAuthGuard` validates the token and resolves the persisted user profile.
+- `GET /api/v3/auth/google` → `GET /api/v3/auth/google/callback`: starts the Google OAuth flow and exchanges the verified Google profile for a JWT session.
+- `GET /api/v3/auth/facebook` → `GET /api/v3/auth/facebook/callback`: same for Facebook Login.
+
+Use these endpoints whenever the backend should own the entire authentication lifecycle without delegating to Supabase or Firebase.
+
 ## Compile and run the project
 
 ```bash

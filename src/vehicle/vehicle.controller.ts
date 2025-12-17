@@ -1,4 +1,16 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseEnumPipe, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Delete,
+  Get,
+  Param,
+  ParseEnumPipe,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
@@ -6,7 +18,7 @@ import { VehicleType } from 'src/database/entities/master-data.entity';
 
 @Controller('vehicle')
 export class VehicleController {
-  constructor(private readonly vehicleService: VehicleService) { }
+  constructor(private readonly vehicleService: VehicleService) {}
 
   @Get()
   findAll(
@@ -15,11 +27,17 @@ export class VehicleController {
     @Query('sort') sort?: string,
     @Query('order') order?: 'ASC' | 'DESC',
     @Query('search') search?: string,
-    @Query('vehicleType', new ParseEnumPipe({ enum: VehicleType, optional: true })) vehicleType?: VehicleType,
+    @Query(
+      'vehicleType',
+      new ParseEnumPipe({ enum: VehicleType, optional: true }),
+    )
+    vehicleType?: VehicleType,
     @Query('customerId') customerId?: string,
   ) {
     const normalizedCustomerId =
-      customerId && !Number.isNaN(Number(customerId)) ? Number(customerId) : undefined;
+      customerId && !Number.isNaN(Number(customerId))
+        ? Number(customerId)
+        : undefined;
     return this.vehicleService.findAll({
       page,
       limit,

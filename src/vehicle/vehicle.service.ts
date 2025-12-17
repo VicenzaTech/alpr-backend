@@ -1,6 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Customer, Vehicle, VehicleType } from 'src/database/entities/master-data.entity';
+import {
+  Customer,
+  Vehicle,
+  VehicleType,
+} from 'src/database/entities/master-data.entity';
 import { PaginatedResult } from 'src/common/types/pagination.type';
 import { Repository } from 'typeorm';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
@@ -14,7 +22,7 @@ export class VehicleService {
     private readonly vehicleRepository: Repository<Vehicle>,
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
-  ) { }
+  ) {}
 
   async findAll(params: {
     page?: number;
@@ -41,14 +49,19 @@ export class VehicleService {
       : 20;
     const skip = (safePage - 1) * safeLimit;
 
-    const vehicleSortFields = ['licensePlateNorm', 'createdAt', 'updatedAt'] as const;
+    const vehicleSortFields = [
+      'licensePlateNorm',
+      'createdAt',
+      'updatedAt',
+    ] as const;
     type VehicleSortField = (typeof vehicleSortFields)[number];
     const candidateSort = sort as VehicleSortField | undefined;
     const sortField: VehicleSortField =
       candidateSort && vehicleSortFields.includes(candidateSort)
         ? candidateSort
         : 'createdAt';
-    const sortOrder: 'ASC' | 'DESC' = order?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    const sortOrder: 'ASC' | 'DESC' =
+      order?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
 
     const qb = this.vehicleRepository
       .createQueryBuilder('vehicle')
@@ -66,7 +79,9 @@ export class VehicleService {
     }
 
     if (customerId && customerId > 0) {
-      qb.andWhere('vehicle.customerId = :customerId', { customerId: customerId.toString() });
+      qb.andWhere('vehicle.customerId = :customerId', {
+        customerId: customerId.toString(),
+      });
     }
 
     qb.orderBy(`vehicle.${sortField}`, sortOrder).skip(skip).take(safeLimit);
@@ -116,7 +131,10 @@ export class VehicleService {
     return this.mapVehicleResponse(withRelations ?? saved);
   }
 
-  async update(vehicleId: number, dto: UpdateVehicleDto): Promise<VehicleResponse> {
+  async update(
+    vehicleId: number,
+    dto: UpdateVehicleDto,
+  ): Promise<VehicleResponse> {
     const vehicle = await this.ensureVehicleExists(vehicleId, true);
 
     if (dto.licensePlateNorm) {
@@ -171,7 +189,10 @@ export class VehicleService {
     return { success: true };
   }
 
-  private async ensureVehicleExists(vehicleId: number, withCustomer = false): Promise<Vehicle> {
+  private async ensureVehicleExists(
+    vehicleId: number,
+    withCustomer = false,
+  ): Promise<Vehicle> {
     const vehicle = await this.vehicleRepository.findOne({
       where: { id: vehicleId.toString() },
       relations: withCustomer ? ['customer'] : undefined,
@@ -184,17 +205,24 @@ export class VehicleService {
     return vehicle;
   }
 
-  private async ensureLicensePlateUnique(licensePlateNorm: string, ignoreId?: string) {
+  private async ensureLicensePlateUnique(
+    licensePlateNorm: string,
+    ignoreId?: string,
+  ) {
     const existing = await this.vehicleRepository.findOne({
       where: { licensePlateNorm },
     });
 
     if (existing && existing.id !== ignoreId) {
-      throw new BadRequestException(`Vehicle ${licensePlateNorm} already exists`);
+      throw new BadRequestException(
+        `Vehicle ${licensePlateNorm} already exists`,
+      );
     }
   }
 
-  private async resolveCustomer(customerId?: number | null): Promise<Customer | null> {
+  private async resolveCustomer(
+    customerId?: number | null,
+  ): Promise<Customer | null> {
     if (!customerId || customerId <= 0) {
       return null;
     }
@@ -223,10 +251,10 @@ export class VehicleService {
       customerId: (vehicle.customerId ?? vehicle.customer?.id) || undefined,
       customer: vehicle.customer
         ? {
-          id: vehicle.customer.id,
-          code: vehicle.customer.code,
-          name: vehicle.customer.name,
-        }
+            id: vehicle.customer.id,
+            code: vehicle.customer.code,
+            name: vehicle.customer.name,
+          }
         : null,
       driverName: vehicle.driverName,
       driverPhone: vehicle.driverPhone,

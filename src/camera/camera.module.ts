@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Camera } from 'src/database/entities/gate.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Camera])],
-    controllers: [CameraController],
-    providers: [CameraService],
+  imports: [TypeOrmModule.forFeature([Camera])],
+  controllers: [CameraController],
+  providers: [CameraService],
 })
-export class CameraModule { }
+export class CameraModule {}

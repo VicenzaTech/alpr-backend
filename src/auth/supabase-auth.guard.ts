@@ -4,7 +4,10 @@ import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class SupabaseAuthGuard implements CanActivate {
-  constructor(private readonly supabase: SupabaseService, private readonly userService: UserService) {}
+  constructor(
+    private readonly supabase: SupabaseService,
+    private readonly userService: UserService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();

@@ -1,11 +1,11 @@
 export type PaginationMeta = {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 };
 
 export type PaginatedResult<T> = {
-    data: T[];
-    meta: PaginationMeta;
+  data: T[];
+  meta: PaginationMeta;
 };

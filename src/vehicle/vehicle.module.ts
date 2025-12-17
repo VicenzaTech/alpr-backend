@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Customer, Vehicle } from 'src/database/entities/master-data.entity';
 
 @Module({
-    controllers: [VehicleController],
-    providers: [VehicleService],
-    imports: [TypeOrmModule.forFeature([Vehicle, Customer])]
+  controllers: [VehicleController],
+  providers: [VehicleService],
+  imports: [TypeOrmModule.forFeature([Vehicle, Customer])],
 })
-export class VehicleModule { }
+export class VehicleModule {}

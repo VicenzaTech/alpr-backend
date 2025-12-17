@@ -10,24 +10,24 @@ import { AuthenticatedUser } from '../types/authenticated-user.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-    constructor(
-        configService: ConfigService,
-        @InjectRepository(User)
-        private readonly userRepo: Repository<User>,
-    ) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: configService.get<string>('JWT_SECRET') ?? 'change-me',
-        });
-    }
+  constructor(
+    configService: ConfigService,
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('JWT_SECRET') ?? 'change-me',
+    });
+  }
 
-    async validate(payload: JwtPayload): Promise<AuthenticatedUser> {
-        const user = await this.userRepo.findOne({ where: { id: payload.sub } });
-        if (!user) {
-            throw new UnauthorizedException('User not found');
-        }
-        const { passwordHash, ...rest } = user;
-        return rest as AuthenticatedUser;
+  async validate(payload: JwtPayload): Promise<AuthenticatedUser> {
+    const user = await this.userRepo.findOne({ where: { id: payload.sub } });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
     }
+    const { passwordHash, ...rest } = user;
+    return rest as AuthenticatedUser;
+  }
 }
